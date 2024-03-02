@@ -3,16 +3,18 @@ const Header = (props) => <h1>{props.name}</h1>
 const Content = (props) => {
   return (
     <div>
-      <p>
-        {props.items[0].part} {props.items[0].exercises}
-      </p>
-      <p>
-      {props.items[1].part} {props.items[1].exercises}
-      </p>
-      <p>
-      {props.items[2].part} {props.items[2].exercises}
-      </p>
+      <InnerContent part={props.items[0].part} exercises={props.items[0].exercises}/>
+      <InnerContent part={props.items[1].part} exercises={props.items[1].exercises}/>
+      <InnerContent part={props.items[2].part} exercises={props.items[2].exercises}/>
     </div>
+  )
+}
+
+const InnerContent = (props) => {
+  return (
+    <p>
+      {props.part} {props.exercises}
+    </p>
   )
 }
 
