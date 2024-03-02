@@ -4,9 +4,9 @@ sequenceDiagram
     participant server
 
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
-    activate server
+    [activate server]
     server-->>browser: Reload to /notes
-    deactivate server
+    [deactivate server]
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
