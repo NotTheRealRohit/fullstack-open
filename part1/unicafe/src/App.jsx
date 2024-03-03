@@ -121,7 +121,7 @@ const App = () => {
       {
         text:"bad",
         handleSmash: handleSmashBad
-      }
+      },
     ],
     statistics: [
       {
@@ -147,7 +147,7 @@ const App = () => {
       {
         text: "positive",
         value: positive
-      }
+      },
     ]
   }
 
