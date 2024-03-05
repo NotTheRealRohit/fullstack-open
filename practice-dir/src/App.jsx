@@ -103,17 +103,55 @@ import ListItems from "./components/ListItems";
 //   )
 // }
 
-const App = ({notes}) => {
+const App = (props) => {
+  const [notes, setNotes] = useState(props.notes);
+  const [newNote, setNewNote] = useState("a new note..")
+  const [showAll,setShowAll] = useState(true);
+
+  const notesToShow = showAll ? notes : notes.filter(note=> note.important)
+
+  const addNote = (e)=>{
+      e.preventDefault();
+      console.log(e.target);
+        const noteObj = {
+          id: notes.length + 1,
+          content: newNote,
+          important: Math.random < 0.5
+        }
+      setNotes(notes.concat(noteObj));
+      setNewNote('');
+  }
+
+  const addNewNote = (e)=>{
+    console.log(e.target.value)
+    setNewNote(e.target.value)
+  }
 
   return (
     <div>
       <h1>Notes</h1>
       <ul>
-        {notes.map((item)=>{
+        {notesToShow.map((note)=>{
           return (
-            <ListItems key={uuidv4()} content={item.content} />
+            <ListItems key={uuidv4()} content={note.content} />
           )
         })}
+
+        <button
+          onClick={()=> setShowAll(!showAll)}
+        >
+         Show {showAll?"Important":"All"}
+        </button>
+
+        <form
+        onSubmit={addNote}>
+          <input 
+            value={newNote}
+            onChange={addNewNote}
+          />
+          <button type="submit">Click here to submit</button>
+        </form>
+
       </ul>
      </div>
   )
