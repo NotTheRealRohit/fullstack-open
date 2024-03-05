@@ -1,6 +1,8 @@
 // import { useState } from 'react';
 
 import { useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
+import ListItems from "./components/ListItems";
 
 // const Display = ({counter}) => <p>{counter}</p>;
   
@@ -80,24 +82,40 @@ import { useState } from "react";
 //   )
 // }
 
-const Button = ({handleClick, text}) => <button onClick={handleClick}> {text}</button>
+// const Button = ({handleClick, text}) => <button onClick={handleClick}> {text}</button>
 
 
-const Display = ({counter}) => <p>{counter}</p>
+// const Display = ({counter}) => <p>{counter}</p>
 
-const App = () => {
-  const [counter, setCounter] = useState(0);
-  const updateCounter = (value) => {
-    console.log("Counter set to ::"+value);
-    setCounter(value);
-  }
+// const App = () => {
+//   const [counter, setCounter] = useState(0);
+//   const updateCounter = (value) => {
+//     console.log("Counter set to ::"+value);
+//     setCounter(value);
+//   }
+
+//   return (
+//     <div>
+//       <Display counter={counter} />
+//       <Button handleClick={() => updateCounter(1000)} text="Set Counter to 1000" />
+//       <Button handleClick={() => updateCounter(counter + 1)} text="Increment counter" />
+//     </div>
+//   )
+// }
+
+const App = ({notes}) => {
 
   return (
     <div>
-      <Display counter={counter} />
-      <Button handleClick={() => updateCounter(1000)} text="Set Counter to 1000" />
-      <Button handleClick={() => updateCounter(counter + 1)} text="Increment counter" />
-    </div>
+      <h1>Notes</h1>
+      <ul>
+        {notes.map((item)=>{
+          return (
+            <ListItems key={uuidv4()} content={item.content} />
+          )
+        })}
+      </ul>
+     </div>
   )
 }
 
