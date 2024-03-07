@@ -1,15 +1,10 @@
-import { v4 as uuidv4 } from 'uuid';
 import Person from './Person';
-const Numbers = ({persons})=>{
-    return (
-        <>
-            {persons.map(person=>{
-        return (
-          <Person key={uuidv4()} name={person.name} number={person.number}/>  
+const Numbers = ({person,onSmashDelete})=>{
+    return(
+            <Person name={person.name} 
+                number={person.number} 
+                onDelete={onSmashDelete}/>      
         )
-      })}
-        </>
-    )
 }
 
 export default Numbers;

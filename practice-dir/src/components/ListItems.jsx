@@ -1,6 +1,13 @@
-const ListItems = ({content})=>{
+const ListItems = ({data,toggleImportance})=>{
+    const label = data.important ? "make not important" : "make important"
     return(
-        <li>{content}</li>
+        <li>
+            {data.content}  
+            <button 
+                onClick={toggleImportance}
+            >{label}</button>    
+        </li>
+
     )
 }
 

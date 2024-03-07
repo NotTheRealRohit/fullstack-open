@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import ListItems from "./components/ListItems";
+import noteService from './service/notes';
 
 // const Display = ({counter}) => <p>{counter}</p>;
   
@@ -106,35 +107,48 @@ import ListItems from "./components/ListItems";
 const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("a new note..")
-  const [showAll,setShowAll] = useState(true);
-
+  const [showAll,setShowAll] = useState(false);
+  
   const notesToShow = showAll ? notes : notes.filter(note=> note.important)
+  console.log(notes);
 
   useEffect(()=>{
-    console.log("inside useEffect")
-    axios.get("http://localhost:3001/notes")
-      .then(response=> {
-        console.log(response)
-        setNotes(response.data);
-      });
+    noteService.getAll()
+      .then(initialNotes=>  setNotes(initialNotes));
   },[]);
-  console.log("render",notes,"..");
 
   const addNote = (e)=>{
       e.preventDefault();
-      console.log(e.target);
         const noteObj = {
-          id: notes.length + 1,
+          // id: notes.length + 1,
           content: newNote,
           important: Math.random < 0.5
         }
-      setNotes(notes.concat(noteObj));
-      setNewNote('');
+
+        noteService.create(noteObj)
+                    .then((newNote)=>{
+                      setNotes(notes.concat(newNote));
+                      setNewNote('');
+                    })
+
   }
 
   const addNewNote = (e)=>{
-    console.log(e.target.value)
     setNewNote(e.target.value)
+  }
+
+  const handleToggleImportance = (id)=>{
+    const url = `http://localhost:3001/notes/${id}`;
+    const note = notes.find(note=> note.id === id);
+    const newNote = {...note, important: !note.important};
+
+    noteService.update(newNote,id)
+      .then(updatedNote=> setNotes(notes.map(note=> note.id !== id ? note : updatedNote)))
+      .catch(error=>{
+        alert(`the note "${note.content}" was already deleted`)
+        setNotes(notes.filter(note=> note.id !== id))
+      })
+
   }
 
   return (
@@ -143,7 +157,11 @@ const App = () => {
       <ul>
         {notesToShow.map((note)=>{
           return (
-            <ListItems key={uuidv4()} content={note.content} />
+            <ListItems 
+              key={uuidv4()} 
+              data={note} 
+              toggleImportance={()=> handleToggleImportance(note.id)}
+            />
           )
         })}
 
