@@ -1,9 +1,10 @@
 // import { useState } from 'react';
-import axios from 'axios';
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import ListItems from "./components/ListItems";
 import noteService from './service/notes';
+import './index.css'
+import Notification from "./components/Notification";
 
 // const Display = ({counter}) => <p>{counter}</p>;
   
@@ -108,7 +109,7 @@ const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("a new note..")
   const [showAll,setShowAll] = useState(false);
-  
+  const [errorMessage, setErrorMessage] = useState(null)
   const notesToShow = showAll ? notes : notes.filter(note=> note.important)
   console.log(notes);
 
@@ -145,7 +146,10 @@ const App = () => {
     noteService.update(newNote,id)
       .then(updatedNote=> setNotes(notes.map(note=> note.id !== id ? note : updatedNote)))
       .catch(error=>{
-        alert(`the note "${note.content}" was already deleted`)
+        setErrorMessage(`Note: "${note.content}" was already deleted from Server`);
+        setTimeout(()=>{
+          setErrorMessage(null);
+        },5000);
         setNotes(notes.filter(note=> note.id !== id))
       })
 
@@ -154,14 +158,16 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={errorMessage}/>
       <ul>
         {notesToShow.map((note)=>{
           return (
-            <ListItems 
-              key={uuidv4()} 
-              data={note} 
-              toggleImportance={()=> handleToggleImportance(note.id)}
-            />
+            <li key={uuidv4()} className="note">
+              <ListItems 
+                data={note} 
+                toggleImportance={()=> handleToggleImportance(note.id)}
+              />
+            </li>
           )
         })}
 

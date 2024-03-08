@@ -1,16 +1,19 @@
+import './style.css';
 import { useState, useEffect } from 'react'
 import Filter from './components/Filter';
 import AddNewContact from './components/AddNewContact';
 import Numbers from './components/Numbers';
 import personService from './service/person';
 import { v4 as uuidv4 } from 'uuid';
+import Message from './components/Message';
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-
+  const [message, setMessage] = useState(null);
+  const [styleMessage, setStyleMessage] = useState("");
   useEffect(()=>{
     personService.getAll()
       .then(initialData=> setPersons(initialData))
@@ -51,12 +54,22 @@ const App = () => {
       personService.create(newPerson)
         .then(createdPerson=>{
           setPersons(persons.concat(createdPerson));
+          createMessage(`Added ${createdPerson.name}`,"messagePop");
         })
         
       }
       setNewName('');
       setNewNumber('');
 
+  }
+
+  const createMessage = (addMessage,styleMessage)=>{
+    setMessage(addMessage);
+    setStyleMessage(styleMessage);
+    setTimeout(()=>{
+      setMessage(null);
+      setStyleMessage("");
+    },2000);
   }
 
   const replaceNumber = (newPerson)=>{
@@ -67,6 +80,7 @@ const App = () => {
     personService.update(personFromState.id,updatePerson)
       .then(data=> {
         setPersons(persons.map(person=> person.id !== data.id ? person : data))
+        createMessage(`Replaced Number for ${data.name}`,"messagePop");
       });
     
   }
@@ -80,13 +94,16 @@ const App = () => {
      personService.deletePerson(item.id)
      .then(data=> {
       setPersons(persons.filter(person=> person.id !== item.id))
+     }).catch(error=>{
+        createMessage(`Already deleted ${item.name}`,"messagePopError");
+        setPersons(persons.filter(person=> person.id !== item.id));
      })
   }
 
   return (
     <div>
       <h1>Phonebook</h1>
-
+      <Message message={message} styleClass={styleMessage}/>
       <h2>Filter Contact</h2>
       <Filter filterValue={filter} onChangeFilter={addFilter}/>
 

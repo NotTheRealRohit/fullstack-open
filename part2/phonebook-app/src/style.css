@@ -1,0 +1,17 @@
+.messagePop{
+    color: green;
+    background: lightgrey;
+    border-color: green;
+    border-style: solid;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.messagePopError{
+    color: red;
+    background: lightgrey;
+    border-color: red;
+    border-style: solid;
+    padding: 10px;
+    border-radius: 5px;
+}
