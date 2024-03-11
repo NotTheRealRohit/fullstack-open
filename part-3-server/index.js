@@ -1,5 +1,6 @@
 let data= require('./persons.json')
 const express = require('express');
+const morgan = require('morgan');
 const app = express();
 
 const generateId =()=>{
@@ -12,7 +13,29 @@ const generateId =()=>{
     return id;
 }
 
+// const requestLogger = (req,res,next)=>{
+//     console.log("method::",req.method);
+//     console.log("path::",req.path);
+//     console.log("body::",req.body);
+//     next();
+// }
+
+// const unknownEndpoint = (req,res,next)=>{
+//     console.log("Unknown endpoint MW")
+//     res.status(404).json({
+//         error:"unknown end point"
+//     });
+//     // next();
+// }
+
+// create custom token :body
+morgan.token("body",(req,res)=>{
+    return JSON.stringify(req.body)
+})
+
 app.use(express.json());
+//Logging of format example :- POST /api/persons 201 54 - 2.601 ms {"name":"Dana Abramov","number":"040-123456"}
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 app.get('/',(req,res)=>{
     res.json("Hello world")
