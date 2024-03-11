@@ -139,7 +139,6 @@ const App = () => {
   }
 
   const handleToggleImportance = (id)=>{
-    const url = `http://localhost:3001/notes/${id}`;
     const note = notes.find(note=> note.id === id);
     const newNote = {...note, important: !note.important};
 
