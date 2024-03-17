@@ -27,12 +27,10 @@ const App = () => {
 
 
   const addNewName = (e)=>{
-    console.log(e.target.value);
     setNewName(e.target.value);
   }
 
   const addNewNumber = (e)=>{
-    console.log(e.target.value);
     setNewNumber(e.target.value);
   }
 
@@ -55,6 +53,9 @@ const App = () => {
         .then(createdPerson=>{
           setPersons(persons.concat(createdPerson));
           createMessage(`Added ${createdPerson.name}`,"messagePop");
+        }).catch(error=>{
+          createMessage(error.response.data.error,"messagePopError");
+          
         })
         
       }
@@ -66,10 +67,11 @@ const App = () => {
   const createMessage = (addMessage,styleMessage)=>{
     setMessage(addMessage);
     setStyleMessage(styleMessage);
+    const timeOut = (styleMessage === "messagePopError")? 4500 : 2000;
     setTimeout(()=>{
       setMessage(null);
       setStyleMessage("");
-    },2000);
+    },timeOut);
   }
 
   const replaceNumber = (newPerson)=>{
@@ -81,6 +83,8 @@ const App = () => {
       .then(data=> {
         setPersons(persons.map(person=> person.id !== data.id ? person : data))
         createMessage(`Replaced Number for ${data.name}`,"messagePop");
+      }).catch(error=>{
+        createMessage(error.response.data.error,"messagePopError");
       });
     
   }
@@ -94,6 +98,7 @@ const App = () => {
      personService.deletePerson(item.id)
      .then(data=> {
       setPersons(persons.filter(person=> person.id !== item.id))
+      createMessage(`Deleted ${item.name}`,"messagePopDelete");
      }).catch(error=>{
         createMessage(`Already deleted ${item.name}`,"messagePopError");
         setPersons(persons.filter(person=> person.id !== item.id));
