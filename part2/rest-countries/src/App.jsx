@@ -13,7 +13,6 @@ function App() {
     axios.get("https://studies.cs.helsinki.fi/restcountries/api/all")
       .then((response)=>{
         const dataFromRest = response.data;
-        let id=1;
         const namesOfCountries = dataFromRest.map((object)=>{
           return object.name.common
         })
